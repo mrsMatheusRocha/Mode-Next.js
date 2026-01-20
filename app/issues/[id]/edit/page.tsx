@@ -3,14 +3,21 @@ import IssueForm from '@/app/components/IssueForm'
 import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+
+export const dynamic = 'force-dynamic'
+
 export default async function EditIssuePage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
+  const issueId = parseInt(id)
 
-  const issue = await getIssue(parseInt(id))
+  if (isNaN(issueId)) {
+    notFound()
+  }
+  const issue = await getIssue(issueId)
 
   if (!issue) {
     notFound()
