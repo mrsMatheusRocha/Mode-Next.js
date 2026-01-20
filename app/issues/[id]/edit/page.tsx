@@ -3,6 +3,17 @@ import IssueForm from '@/app/components/IssueForm'
 import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
+
+async function EditIssueFormLoader({ issueId }: { issueId: number }) {
+  const issue = await getIssue(issueId)
+
+  if (!issue) {
+    notFound()
+  }
+
+  return <IssueForm userId={issue.userId} issue={issue} isEditing />
+}
 
 export default async function EditIssuePage({
   params,
@@ -13,12 +24,7 @@ export default async function EditIssuePage({
   const issueId = parseInt(id)
 
   if (isNaN(issueId)) {
-    notFound()
-  }
-  const issue = await getIssue(issueId)
-
-  if (!issue) {
-    notFound()
+    return notFound()
   }
 
   return (
@@ -34,7 +40,10 @@ export default async function EditIssuePage({
       <h1 className="text-2xl font-bold mb-6">Edit Issue</h1>
 
       <div className="bg-white dark:bg-dark-elevated border border-gray-200 dark:border-dark-border-default rounded-lg shadow-sm p-6">
-        <IssueForm userId={issue.userId} issue={issue} isEditing />
+        {/* 3. Wrap the data fetching component in Suspense */}
+        <Suspense fallback={<p>Loading issue...</p>}>
+          <EditIssueFormLoader issueId={issueId} />
+        </Suspense>
       </div>
     </div>
   )
