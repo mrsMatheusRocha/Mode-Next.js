@@ -8,6 +8,7 @@ import Button from '@/app/components/ui/Button'
 import { ArrowLeftIcon, Edit2Icon } from 'lucide-react'
 import DeleteIssueButton from '../../components/DeleteIssueButton'
 
+
 export default async function IssuePage({
   params,
 }: {
